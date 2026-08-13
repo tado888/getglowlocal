@@ -149,17 +149,24 @@ const STEPS = [
   },
 ];
 
+type FieldErrors = {
+  name?: string;
+  business_name?: string;
+  email?: string;
+  phone?: string;
+  has_website?: string;
+  website?: string;
+};
+
 function LeadForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
   const [hasWebsite, setHasWebsite] = useState<"yes" | "no" | "">("");
-  const [validationErrors, setValidationErrors] = useState<
-    Record<string, string>
-  >({});
+  const [validationErrors, setValidationErrors] = useState<FieldErrors>({});
 
   function validate(formData: FormData): boolean {
-    const errors: Record<string, string> = {};
-    const requiredFields = ["name", "business_name", "email", "phone"];
+    const errors: FieldErrors = {};
+    const requiredFields = ["name", "business_name", "email", "phone"] as const;
     for (const fieldName of requiredFields) {
       const value = String(formData.get(fieldName) ?? "").trim();
       if (!value) errors[fieldName] = "This field is required";
