@@ -546,10 +546,10 @@ function Index() {
               More reviews. More trust. More customers.
             </p>
             <a
-              href="mailto:hello@getglowlocal.io"
+              href="mailto:grow@getglowlocal.io"
               className="mt-3 inline-block text-base text-accent underline-offset-4 hover:underline"
             >
-              hello@getglowlocal.io
+              grow@getglowlocal.io
             </a>
           </div>
           <div className="flex gap-5 text-sm text-muted-foreground">
