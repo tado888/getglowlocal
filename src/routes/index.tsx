@@ -255,6 +255,7 @@ function LeadForm() {
             name="name"
             placeholder="Your name"
             maxLength={100}
+            onChange={() => clearError("name")}
             aria-invalid={!!validationErrors.name}
             aria-describedby={
               validationErrors.name ? "name-error" : undefined
@@ -278,6 +279,7 @@ function LeadForm() {
             name="business_name"
             placeholder="Business name"
             maxLength={120}
+            onChange={() => clearError("business_name")}
             aria-invalid={!!validationErrors.business_name}
             aria-describedby={
               validationErrors.business_name ? "business_name-error" : undefined
@@ -300,6 +302,7 @@ function LeadForm() {
             type="email"
             placeholder="Email"
             maxLength={255}
+            onChange={() => clearError("email")}
             aria-invalid={!!validationErrors.email}
             aria-describedby={
               validationErrors.email ? "email-error" : undefined
@@ -322,6 +325,7 @@ function LeadForm() {
             type="tel"
             placeholder="Phone"
             maxLength={40}
+            onChange={() => clearError("phone")}
             aria-invalid={!!validationErrors.phone}
             aria-describedby={
               validationErrors.phone ? "phone-error" : undefined
@@ -356,9 +360,15 @@ function LeadForm() {
             validationErrors.has_website ? fieldError : ""
           }`}
           value={hasWebsite}
-          onChange={(e) =>
-            setHasWebsite(e.target.value as "yes" | "no" | "")
-          }
+          onChange={(e) => {
+            const value = e.target.value as "yes" | "no" | "";
+            setHasWebsite(value);
+            setValidationErrors((prev) => ({
+              ...prev,
+              has_website: undefined,
+              website: undefined,
+            }));
+          }}
           aria-invalid={!!validationErrors.has_website}
           aria-describedby={
             validationErrors.has_website ? "has_website-error" : undefined
@@ -390,6 +400,7 @@ function LeadForm() {
             type="url"
             placeholder="https://yourbusiness.com"
             maxLength={500}
+            onChange={() => clearError("website")}
             aria-invalid={!!validationErrors.website}
             aria-describedby={
               validationErrors.website ? "website-error" : undefined
