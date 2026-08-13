@@ -45,6 +45,7 @@ function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortAsc, setSortAsc] = useState(false);
+  const [query, setQuery] = useState("");
 
   async function load() {
     setLoading(true);
@@ -65,7 +66,17 @@ function AdminPage() {
   }, []);
 
   const sorted = useMemo(() => {
-    const copy = [...leads];
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? leads.filter((lead) =>
+          COLUMNS.some((col) =>
+            String(lead[col.key] ?? "")
+              .toLowerCase()
+              .includes(q),
+          ),
+        )
+      : leads;
+    const copy = [...filtered];
     copy.sort((a, b) => {
       const av = a[sortKey] ?? "";
       const bv = b[sortKey] ?? "";
@@ -76,7 +87,32 @@ function AdminPage() {
       return sortAsc ? cmp : -cmp;
     });
     return copy;
-  }, [leads, sortKey, sortAsc]);
+  }, [leads, sortKey, sortAsc, query]);
+
+  function exportCsv() {
+    const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const header = COLUMNS.map((c) => escape(c.label)).join(",");
+    const rows = sorted.map((lead) =>
+      COLUMNS.map((c) =>
+        escape(
+          c.key === "created_at"
+            ? new Date(lead.created_at).toLocaleString()
+            : lead[c.key],
+        ),
+      ).join(","),
+    );
+    const csv = [header, ...rows].join("\r\n");
+    const blob = new Blob(["\uFEFF" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
 
   async function onLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
