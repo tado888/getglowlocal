@@ -164,6 +164,10 @@ function LeadForm() {
   const [hasWebsite, setHasWebsite] = useState<"yes" | "no" | "">("");
   const [validationErrors, setValidationErrors] = useState<FieldErrors>({});
 
+  function clearError(fieldName: keyof FieldErrors) {
+    setValidationErrors((prev) => ({ ...prev, [fieldName]: undefined }));
+  }
+
   function validate(formData: FormData): boolean {
     const errors: FieldErrors = {};
     const requiredFields = ["name", "business_name", "email", "phone"] as const;
