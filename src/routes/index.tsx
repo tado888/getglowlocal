@@ -149,25 +149,65 @@ const STEPS = [
   },
 ];
 
+type FieldErrors = {
+  name?: string | undefined;
+  business_name?: string | undefined;
+  email?: string | undefined;
+  phone?: string | undefined;
+  has_website?: string | undefined;
+  website?: string | undefined;
+};
+
 function LeadForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [hasWebsite, setHasWebsite] = useState<"yes" | "no" | "">("");
+  const [validationErrors, setValidationErrors] = useState<FieldErrors>({});
+
+  function clearError(fieldName: keyof FieldErrors) {
+    setValidationErrors((prev) => ({ ...prev, [fieldName]: undefined }));
+  }
+
+  function validate(formData: FormData): boolean {
+    const errors: FieldErrors = {};
+    const requiredFields = ["name", "business_name", "email", "phone"] as const;
+    for (const fieldName of requiredFields) {
+      const value = String(formData.get(fieldName) ?? "").trim();
+      if (!value) errors[fieldName] = "This field is required";
+    }
+    if (!hasWebsite) {
+      errors.has_website = "Please select an option";
+    }
+    if (hasWebsite === "yes") {
+      const website = String(formData.get("website") ?? "").trim();
+      if (!website) errors.website = "Website URL is required";
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
     if ((data.get("company_website") as string)?.trim()) return; // honeypot
+    if (!validate(data)) return;
     setStatus("sending");
     setError(null);
-    const { error: insertError } = await supabase.from("leads").insert({
+    const insertData = {
       name: String(data.get("name") ?? "").trim(),
       business_name: String(data.get("business_name") ?? "").trim(),
       email: String(data.get("email") ?? "").trim(),
       phone: String(data.get("phone") ?? "").trim(),
       city: String(data.get("city") ?? "").trim() || null,
       message: String(data.get("message") ?? "").trim() || null,
-    });
+      ...(hasWebsite === "yes"
+        ? { website: String(data.get("website") ?? "").trim() }
+        : {}),
+    };
+    const { error: insertError } = await supabase
+      .from("leads")
+      .insert(insertData as any);
     if (insertError) {
       setStatus("idle");
       setError("Something went wrong. Please try again.");
@@ -190,9 +230,12 @@ function LeadForm() {
 
   const field =
     "w-full rounded-lg border border-border bg-card px-4 py-3 text-base text-foreground outline-none placeholder:text-muted-foreground focus:border-accent";
+  const fieldError = "border-destructive focus:border-destructive";
+  const labelClass = "text-sm font-medium text-foreground";
+  const errorClass = "text-sm text-destructive";
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-4">
+    <form onSubmit={onSubmit} className="grid gap-4" noValidate>
       <input
         type="text"
         name="company_website"
@@ -202,38 +245,186 @@ function LeadForm() {
         className="hidden"
       />
       <div className="grid gap-4 sm:grid-cols-2">
-        <input className={field} name="name" placeholder="Your name" required maxLength={100} />
+        <div className="grid gap-1">
+          <label htmlFor="name" className={labelClass}>
+            Name <span className="text-destructive">*</span>
+          </label>
+          <input
+            id="name"
+            className={`${field} ${validationErrors.name ? fieldError : ""}`}
+            name="name"
+            placeholder="Your name"
+            maxLength={100}
+            onChange={() => clearError("name")}
+            aria-invalid={!!validationErrors.name}
+            aria-describedby={
+              validationErrors.name ? "name-error" : undefined
+            }
+          />
+          {validationErrors.name && (
+            <p id="name-error" className={errorClass}>
+              {validationErrors.name}
+            </p>
+          )}
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="business_name" className={labelClass}>
+            Business Name <span className="text-destructive">*</span>
+          </label>
+          <input
+            id="business_name"
+            className={`${field} ${
+              validationErrors.business_name ? fieldError : ""
+            }`}
+            name="business_name"
+            placeholder="Business name"
+            maxLength={120}
+            onChange={() => clearError("business_name")}
+            aria-invalid={!!validationErrors.business_name}
+            aria-describedby={
+              validationErrors.business_name ? "business_name-error" : undefined
+            }
+          />
+          {validationErrors.business_name && (
+            <p id="business_name-error" className={errorClass}>
+              {validationErrors.business_name}
+            </p>
+          )}
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="email" className={labelClass}>
+            Email <span className="text-destructive">*</span>
+          </label>
+          <input
+            id="email"
+            className={`${field} ${validationErrors.email ? fieldError : ""}`}
+            name="email"
+            type="email"
+            placeholder="Email"
+            maxLength={255}
+            onChange={() => clearError("email")}
+            aria-invalid={!!validationErrors.email}
+            aria-describedby={
+              validationErrors.email ? "email-error" : undefined
+            }
+          />
+          {validationErrors.email && (
+            <p id="email-error" className={errorClass}>
+              {validationErrors.email}
+            </p>
+          )}
+        </div>
+        <div className="grid gap-1">
+          <label htmlFor="phone" className={labelClass}>
+            Phone <span className="text-destructive">*</span>
+          </label>
+          <input
+            id="phone"
+            className={`${field} ${validationErrors.phone ? fieldError : ""}`}
+            name="phone"
+            type="tel"
+            placeholder="Phone"
+            maxLength={40}
+            onChange={() => clearError("phone")}
+            aria-invalid={!!validationErrors.phone}
+            aria-describedby={
+              validationErrors.phone ? "phone-error" : undefined
+            }
+          />
+          {validationErrors.phone && (
+            <p id="phone-error" className={errorClass}>
+              {validationErrors.phone}
+            </p>
+          )}
+        </div>
+      </div>
+      <div className="grid gap-1">
+        <label htmlFor="city" className={labelClass}>
+          City
+        </label>
         <input
+          id="city"
           className={field}
-          name="business_name"
-          placeholder="Business name"
-          required
-          maxLength={120}
-        />
-        <input
-          className={field}
-          name="email"
-          type="email"
-          placeholder="Email"
-          required
-          maxLength={255}
-        />
-        <input
-          className={field}
-          name="phone"
-          type="tel"
-          placeholder="Phone"
-          required
-          maxLength={40}
+          name="city"
+          placeholder="City (optional)"
+          maxLength={100}
         />
       </div>
-      <input className={field} name="city" placeholder="City (optional)" maxLength={100} />
-      <textarea
-        className={`${field} min-h-28`}
-        name="message"
-        placeholder="Tell us about your business (optional)"
-        maxLength={1000}
-      />
+      <div className="grid gap-1">
+        <label htmlFor="has_website" className={labelClass}>
+          Do you have a website? <span className="text-destructive">*</span>
+        </label>
+        <select
+          id="has_website"
+          className={`${field} ${
+            validationErrors.has_website ? fieldError : ""
+          }`}
+          value={hasWebsite}
+          onChange={(e) => {
+            const value = e.target.value as "yes" | "no" | "";
+            setHasWebsite(value);
+            setValidationErrors((prev) => ({
+              ...prev,
+              has_website: undefined,
+              website: undefined,
+            }));
+          }}
+          aria-invalid={!!validationErrors.has_website}
+          aria-describedby={
+            validationErrors.has_website ? "has_website-error" : undefined
+          }
+        >
+          <option value="" disabled>
+            Select...
+          </option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select>
+        {validationErrors.has_website && (
+          <p id="has_website-error" className={errorClass}>
+            {validationErrors.has_website}
+          </p>
+        )}
+      </div>
+      {hasWebsite === "yes" && (
+        <div className="grid gap-1">
+          <label htmlFor="website" className={labelClass}>
+            Website URL <span className="text-destructive">*</span>
+          </label>
+          <input
+            id="website"
+            className={`${field} ${
+              validationErrors.website ? fieldError : ""
+            }`}
+            name="website"
+            type="url"
+            placeholder="https://yourbusiness.com"
+            maxLength={500}
+            onChange={() => clearError("website")}
+            aria-invalid={!!validationErrors.website}
+            aria-describedby={
+              validationErrors.website ? "website-error" : undefined
+            }
+          />
+          {validationErrors.website && (
+            <p id="website-error" className={errorClass}>
+              {validationErrors.website}
+            </p>
+          )}
+        </div>
+      )}
+      <div className="grid gap-1">
+        <label htmlFor="message" className={labelClass}>
+          Tell us about your business
+        </label>
+        <textarea
+          id="message"
+          className={`${field} min-h-28`}
+          name="message"
+          placeholder="Tell us about your business (optional)"
+          maxLength={1000}
+        />
+      </div>
       {error && <p className="text-sm text-destructive">{error}</p>}
       <button
         type="submit"
