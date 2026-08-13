@@ -45,6 +45,7 @@ function AdminPage() {
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("created_at");
   const [sortAsc, setSortAsc] = useState(false);
+  const [query, setQuery] = useState("");
 
   async function load() {
     setLoading(true);
@@ -65,7 +66,17 @@ function AdminPage() {
   }, []);
 
   const sorted = useMemo(() => {
-    const copy = [...leads];
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? leads.filter((lead) =>
+          COLUMNS.some((col) =>
+            String(lead[col.key] ?? "")
+              .toLowerCase()
+              .includes(q),
+          ),
+        )
+      : leads;
+    const copy = [...filtered];
     copy.sort((a, b) => {
       const av = a[sortKey] ?? "";
       const bv = b[sortKey] ?? "";
@@ -76,7 +87,32 @@ function AdminPage() {
       return sortAsc ? cmp : -cmp;
     });
     return copy;
-  }, [leads, sortKey, sortAsc]);
+  }, [leads, sortKey, sortAsc, query]);
+
+  function exportCsv() {
+    const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const header = COLUMNS.map((c) => escape(c.label)).join(",");
+    const rows = sorted.map((lead) =>
+      COLUMNS.map((c) =>
+        escape(
+          c.key === "created_at"
+            ? new Date(lead.created_at).toLocaleString()
+            : lead[c.key],
+        ),
+      ).join(","),
+    );
+    const csv = [header, ...rows].join("\r\n");
+    const blob = new Blob(["\uFEFF" + csv], {
+      type: "text/csv;charset=utf-8;",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leads-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
 
   async function onLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -148,16 +184,33 @@ function AdminPage() {
           <div>
             <h1 className="text-2xl font-bold">Form submissions</h1>
             <p className="text-sm text-muted-foreground">
-              {leads.length} total
+              Showing {sorted.length} of {leads.length}
             </p>
           </div>
-          <button
-            onClick={onLogout}
-            className="rounded-md border border-foreground/20 px-4 py-2 text-sm font-medium"
-          >
-            Log out
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search submissions"
+              aria-label="Search submissions"
+              className="rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+            />
+            <button
+              onClick={exportCsv}
+              className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground"
+            >
+              Export to CSV
+            </button>
+            <button
+              onClick={onLogout}
+              className="rounded-md border border-foreground/20 px-4 py-2 text-sm font-medium"
+            >
+              Log out
+            </button>
+          </div>
         </div>
+
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-foreground/15 bg-card">
           <table className="w-full min-w-[900px] text-left text-sm">
