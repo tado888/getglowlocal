@@ -184,16 +184,33 @@ function AdminPage() {
           <div>
             <h1 className="text-2xl font-bold">Form submissions</h1>
             <p className="text-sm text-muted-foreground">
-              {leads.length} total
+              Showing {sorted.length} of {leads.length}
             </p>
           </div>
-          <button
-            onClick={onLogout}
-            className="rounded-md border border-foreground/20 px-4 py-2 text-sm font-medium"
-          >
-            Log out
-          </button>
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search submissions"
+              aria-label="Search submissions"
+              className="rounded-md border border-foreground/20 bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-accent"
+            />
+            <button
+              onClick={exportCsv}
+              className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground"
+            >
+              Export to CSV
+            </button>
+            <button
+              onClick={onLogout}
+              className="rounded-md border border-foreground/20 px-4 py-2 text-sm font-medium"
+            >
+              Log out
+            </button>
+          </div>
         </div>
+
 
         <div className="mt-6 overflow-x-auto rounded-xl border border-foreground/15 bg-card">
           <table className="w-full min-w-[900px] text-left text-sm">
