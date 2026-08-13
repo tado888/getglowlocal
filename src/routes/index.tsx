@@ -150,12 +150,12 @@ const STEPS = [
 ];
 
 type FieldErrors = {
-  name?: string;
-  business_name?: string;
-  email?: string;
-  phone?: string;
-  has_website?: string;
-  website?: string;
+  name?: string | undefined;
+  business_name?: string | undefined;
+  email?: string | undefined;
+  phone?: string | undefined;
+  has_website?: string | undefined;
+  website?: string | undefined;
 };
 
 function LeadForm() {
