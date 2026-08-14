@@ -39,14 +39,14 @@ export function GhlPopupProvider({ children }: { children: React.ReactNode }) {
           onClick={() => setOpen(false)}
         >
           <div
-            className="relative h-[90vh] w-full max-w-xl overflow-hidden rounded-lg bg-card shadow-xl"
+            className="relative h-full max-h-[95vh] w-full max-w-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close form"
               onClick={() => setOpen(false)}
-              className="absolute right-2 top-2 z-10 rounded-full bg-background/90 p-2 text-foreground shadow"
+              className="absolute right-0 top-0 z-10 rounded-full bg-background/90 p-2 text-foreground shadow"
             >
               <X className="size-5" />
             </button>
