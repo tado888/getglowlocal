@@ -15,12 +15,14 @@ export function GhlPopupProvider({ children }: { children: React.ReactNode }) {
   const openPopup = useCallback(() => setOpen(true), []);
 
   useEffect(() => {
+    if (!open) return;
     if (document.querySelector(`script[src="${SCRIPT_SRC}"]`)) return;
     const s = document.createElement("script");
     s.src = SCRIPT_SRC;
     s.async = true;
+    s.dataset["ghlEmbed"] = "true";
     document.body.appendChild(s);
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
