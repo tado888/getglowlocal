@@ -2,7 +2,6 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { X } from "lucide-react";
 
 const FORM_ID = "lbUkQzatX4dixQ5xFQnL";
-const SCRIPT_SRC = "https://link.msgsndr.com/js/form_embed.js";
 
 const GhlPopupContext = createContext<() => void>(() => {});
 
@@ -13,16 +12,6 @@ export function useGhlPopup() {
 export function GhlPopupProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const openPopup = useCallback(() => setOpen(true), []);
-
-  useEffect(() => {
-    if (!open) return;
-    if (document.querySelector(`script[src="${SCRIPT_SRC}"]`)) return;
-    const s = document.createElement("script");
-    s.src = SCRIPT_SRC;
-    s.async = true;
-    s.dataset["ghlEmbed"] = "true";
-    document.body.appendChild(s);
-  }, [open]);
 
   useEffect(() => {
     if (!open) return;
