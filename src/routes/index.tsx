@@ -44,11 +44,16 @@ export const Route = createFileRoute("/")({
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "Organization",
+          "@type": "LocalBusiness",
           name: "Get Glow Local",
           url: "https://getglowlocal.io",
+          logo: `https://getglowlocal.lovable.app${logo.url}`,
+          image: `https://getglowlocal.lovable.app${logo.url}`,
           description:
-            "Automatic Google review requests for local businesses.",
+            "We turn your happy customers into 5-star Google reviews automatically for local businesses.",
+          email: "grow@getglowlocal.io",
+          priceRange: "$297/month",
+          areaServed: "US",
         }),
       },
     ],
