@@ -35,18 +35,18 @@ export function GhlPopupProvider({ children }: { children: React.ReactNode }) {
           role="dialog"
           aria-modal="true"
           aria-label="Get Glow Local Form"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/60 p-3 sm:p-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center"
           onClick={() => setOpen(false)}
         >
           <div
-            className="relative h-full max-h-[95vh] w-full max-w-2xl"
+            className="relative h-full w-full"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               aria-label="Close form"
               onClick={() => setOpen(false)}
-              className="absolute right-0 top-0 z-10 rounded-full bg-background/90 p-2 text-foreground shadow"
+              className="absolute right-4 top-4 z-10 rounded-full bg-background/90 p-2 text-foreground shadow"
             >
               <X className="size-5" />
             </button>
