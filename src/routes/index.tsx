@@ -1,15 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import {
-  Menu,
-  X,
-  Search,
-  Link2,
-  Users,
-  Send,
-  Star,
-  Check,
-} from "lucide-react";
+import { Menu, X, Search, Link2, Users, Send, Star } from "lucide-react";
 import { GhlPopupProvider, useGhlPopup } from "@/components/GhlPopup";
 import logo from "@/assets/logo.png.asset.json";
 
@@ -154,8 +145,8 @@ const STEPS = [
     icon: Star,
     title: "Reviews start rolling in",
     body: "You don't lift a finger.",
-  );
-}
+  },
+];
 
 function Index() {
   return (
@@ -284,5 +275,6 @@ function Index() {
         </div>
       </footer>
     </div>
+    </GhlPopupProvider>
   );
 }
