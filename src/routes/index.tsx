@@ -121,15 +121,18 @@ function Header() {
 }
 
 function Cta({ className = "" }: { className?: string }) {
+  const openPopup = useGhlPopup();
   return (
-    <a
-      href="#contact"
+    <button
+      type="button"
+      onClick={openPopup}
       className={`inline-flex items-center justify-center rounded-full bg-accent px-8 py-4 text-base font-semibold text-accent-foreground transition-colors hover:bg-accent/90 ${className}`}
     >
       Get Started Free
-    </a>
+    </button>
   );
 }
+
 
 const STEPS = [
   {
