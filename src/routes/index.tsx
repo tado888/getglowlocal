@@ -72,13 +72,7 @@ function Header() {
         </a>
         <nav className="hidden items-center gap-8 sm:flex">
           {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              className="text-sm font-medium text-foreground transition-colors hover:text-accent"
-            >
-              {n.label}
-            </a>
+            <NavLink key={n.href} item={n} />
           ))}
         </nav>
         <button
@@ -94,18 +88,67 @@ function Header() {
       {open && (
         <nav className="border-t border-border bg-background sm:hidden">
           {NAV.map((n) => (
-            <a
-              key={n.href}
-              href={n.href}
-              onClick={() => setOpen(false)}
-              className="block border-b border-border/60 px-5 py-4 text-base font-medium text-foreground"
-            >
-              {n.label}
-            </a>
+            <MobileNavLink key={n.href} item={n} onClick={() => setOpen(false)} />
           ))}
         </nav>
       )}
     </header>
+  );
+}
+
+function NavLink({ item }: { item: { href: string; label: string } }) {
+  const openPopup = useGhlPopup();
+  if (item.href === "#contact") {
+    return (
+      <button
+        type="button"
+        onClick={openPopup}
+        className="text-sm font-medium text-foreground transition-colors hover:text-accent"
+      >
+        {item.label}
+      </button>
+    );
+  }
+  return (
+    <a
+      href={item.href}
+      className="text-sm font-medium text-foreground transition-colors hover:text-accent"
+    >
+      {item.label}
+    </a>
+  );
+}
+
+function MobileNavLink({
+  item,
+  onClick,
+}: {
+  item: { href: string; label: string };
+  onClick: () => void;
+}) {
+  const openPopup = useGhlPopup();
+  if (item.href === "#contact") {
+    return (
+      <button
+        type="button"
+        onClick={() => {
+          onClick();
+          openPopup();
+        }}
+        className="block w-full border-b border-border/60 px-5 py-4 text-left text-base font-medium text-foreground"
+      >
+        {item.label}
+      </button>
+    );
+  }
+  return (
+    <a
+      href={item.href}
+      onClick={onClick}
+      className="block border-b border-border/60 px-5 py-4 text-base font-medium text-foreground"
+    >
+      {item.label}
+    </a>
   );
 }
 
