@@ -224,9 +224,12 @@ function Index() {
             <h2 className="text-3xl font-bold tracking-tight text-foreground">
               Try It Free. Keep It If You Love It.
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            <p className="mx-auto mt-5 max-w-xl whitespace-pre-line text-lg leading-relaxed text-muted-foreground">
               14 days free. $297/month after, only if you want to keep it. No
               contract. Cancel anytime, no questions asked.
+              {"\n"}Ready to See Your Review Gap?
+              {"\n"}Tell us a bit about your business and we'll reach out to get you
+              set up.
             </p>
             <Cta className="mt-9" />
           </div>
@@ -234,13 +237,6 @@ function Index() {
 
         <section id="contact" className="scroll-mt-20 border-t border-border bg-card">
           <div className="mx-auto max-w-2xl px-5 py-20">
-            <h2 className="text-3xl font-bold tracking-tight text-foreground">
-              Ready to See Your Review Gap?
-            </h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Tell us a bit about your business and we'll reach out to get you
-              set up.
-            </p>
             <div className="mt-9">
               <Cta />
             </div>
