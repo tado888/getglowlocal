@@ -66,9 +66,7 @@ function Header() {
           <img
             src={logo.url}
             alt="Get Glow Local logo"
-            className="h-11 w-11 rounded-full object-cover"
-            width={44}
-            height={44}
+            className="h-9 w-auto object-contain"
           />
           <span className="sr-only">Get Glow Local</span>
         </a>
