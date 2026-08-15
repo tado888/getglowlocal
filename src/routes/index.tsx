@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Search, Link2, Users, Send, Star } from "lucide-react";
 import { GhlPopupProvider, useGhlPopup } from "@/components/GhlPopup";
-import logo from "@/assets/logo.png.asset.json";
+const LOGO_URL = "/logo.png";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -38,8 +38,8 @@ export const Route = createFileRoute("/")({
           "@type": "LocalBusiness",
           name: "Get Glow Local",
           url: "https://getglowlocal.io",
-          logo: `https://getglowlocal.lovable.app${logo.url}`,
-          image: `https://getglowlocal.lovable.app${logo.url}`,
+          logo: `https://getglowlocal.lovable.app${LOGO_URL}`,
+          image: `https://getglowlocal.lovable.app${LOGO_URL}`,
           description:
             "We turn your happy customers into 5-star Google reviews automatically for local businesses.",
           email: "grow@getglowlocal.io",
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/")({
 const NAV = [
   { href: "#how-it-works", label: "How It Works" },
   { href: "#pricing", label: "Pricing" },
-  { href: "#contact", label: "Contact" },
+  { href: "#pricing", label: "Contact" },
 ];
 
 function Header() {
@@ -64,7 +64,7 @@ function Header() {
       <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
         <a href="#top" className="flex items-center gap-2">
           <img
-            src={logo.url}
+            src={LOGO_URL}
             alt="Get Glow Local logo"
             className="h-9 w-auto object-contain"
           />
