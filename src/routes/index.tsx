@@ -54,7 +54,7 @@ export const Route = createFileRoute("/")({
 const NAV = [
   { href: "#how-it-works", label: "How It Works" },
   { href: "#pricing", label: "Pricing" },
-  { href: "#pricing", label: "Contact" },
+  { href: "#contact", label: "Contact" },
 ];
 
 function Header() {
@@ -236,7 +236,7 @@ function Index() {
         </section>
       </main>
 
-      <footer className="border-t border-border">
+      <footer id="contact" className="scroll-mt-20 border-t border-border">
         <div className="mx-auto flex max-w-5xl flex-col gap-4 px-5 py-12 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-lg font-semibold text-foreground">getglowlocal.io</p>
