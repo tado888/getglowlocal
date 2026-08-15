@@ -234,14 +234,6 @@ function Index() {
             <Cta className="mt-9" />
           </div>
         </section>
-
-        <section id="contact" className="scroll-mt-20 border-t border-border bg-card">
-          <div className="mx-auto max-w-2xl px-5 py-20">
-            <div className="mt-9">
-              <Cta />
-            </div>
-          </div>
-        </section>
       </main>
 
       <footer className="border-t border-border">
