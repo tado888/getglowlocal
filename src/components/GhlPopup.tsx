@@ -35,7 +35,7 @@ export function GhlPopupProvider({ children }: { children: React.ReactNode }) {
           role="dialog"
           aria-modal="true"
           aria-label="Get Glow Local Form"
-          className="fixed inset-0 z-[100] flex items-center justify-center"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/50"
           onClick={() => setOpen(false)}
         >
           <div
